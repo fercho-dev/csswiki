@@ -8,17 +8,28 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'CSS Wiki',
   description: 'Recursos para dominar CSS',
+  robots: {
+    index: true,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: true,
+      follow: false,
+      noimageindex: true,
+    },
+  },
   openGraph: {
     title: 'CSS Wiki',
     description: 'Recursos para dominar CSS',
     images: [
-      // {
-      //   url: 'https://images.unsplash.com/photo-1621839673705-6617adf9e890',
-      //   width: 800,
-      //   height: 600,
-      // },
       {
-        url: 'https://images.unsplash.com/photo-1621839673705-6617adf9e890',
+        url: 'https://i.imgur.com/qUOMBhi.png',
+        width: 800,
+        height: 600,
+        alt: 'CSS Wiki - Recursos para dominar CSS',
+      },
+      {
+        url: 'https://i.imgur.com/qUOMBhi.png',
         width: 1800,
         height: 1600,
         alt: 'CSS Wiki - Recursos para dominar CSS',
