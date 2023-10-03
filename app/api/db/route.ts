@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   const url_solicitud = request.nextUrl.searchParams.get('url')
   const filtro = request.nextUrl.searchParams.get('filtro')
+  const social = request.nextUrl.searchParams.get('social') || 'NA'
 
    try {
        const client = await clientPromise;
@@ -18,7 +19,7 @@ export async function POST(request: NextRequest) {
       // return NextResponse.json(urls);
 
       // insert to collection
-      const doc = { url: url_solicitud, filtro: filtro };
+      const doc = { url: url_solicitud, filtro: filtro, social: social };
       const myColl = db.collection(process.env.MONGODB_COLLECTION_NAME as string);
       const result = await myColl.insertOne(doc);
 

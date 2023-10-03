@@ -3,6 +3,7 @@
 import React, { FC, FormEvent, ChangeEvent, useState } from 'react';
 import { filters } from '../data';
 import { Filtro } from '../types';
+import './AddForm.css'
 
 async function postData(url: string) {
   try {
@@ -38,6 +39,7 @@ export const CustomForm: FC = () => {
     const [filtro, setFiltro] = useState<string>(filters[0]);
     const [customFiltro, setCustomFiltro] = useState<boolean>(false);
     const [customFiltroValue, setCustomFiltroValue] = useState<string>('');
+    const [social, setSocial] = useState<string>('');
 
     const handleSubmit = (e: FormEvent): void => {
         e.preventDefault();
@@ -47,25 +49,25 @@ export const CustomForm: FC = () => {
         } else {
             filtroToSave = filtro;
         }
-        alert(filtroToSave);
-        // if (!isValidURL(url)) {
-        //     alert('Ups! Parece que la URL no es valida.');
-        //     return;
-        // }
+        if (!isValidURL(url)) {
+            alert('Ups! Parece que la URL no es valida.');
+            return;
+        }
 
-        // postData(`/api/db?url=${url}&filtro=${filtro}`)
-        //   .then(data => {
-        //       if(data.acknowledged) {
-        //           alert('🎉 ¡Recurso guardado exitosamente! Se validará y se agregará pronto');
-        //           setUrl('');
-        //           setFiltro('');
-        //       } else {
-        //         throw new Error('No se pudo guardar el recurso.');
-        //       }
-        //   })
-        //   .catch(error => {
-        //       alert(`Algo salio mal. Intentalo más tarde. ${error}`);
-        //   });
+        postData(`/api/db?url=${url}&filtro=${filtroToSave}&social=${social}`)
+          .then(data => {
+              if(data.acknowledged) {
+                  alert('🎉 ¡Recurso guardado exitosamente! Se validará y se agregará pronto');
+                  setUrl('');
+                  setCustomFiltroValue('');
+                  setSocial('');
+              } else {
+                throw new Error('No se pudo guardar el recurso.');
+              }
+          })
+          .catch(error => {
+              alert(`Algo salio mal. Intentalo más tarde. ${error}`);
+          });
     }
 
     const handleFilterChange = (e: ChangeEvent<HTMLSelectElement>): void => {
@@ -89,6 +91,7 @@ export const CustomForm: FC = () => {
                         type="text" 
                         value={url} 
                         onChange={(e) => setUrl(e.target.value)}
+                        placeholder='csswiki.dev'
                         className='border border-slate-200 bg-slate-100 rounded mx-4 px-2 outline-none'
                     />
                 </label>
@@ -116,6 +119,19 @@ export const CustomForm: FC = () => {
                         className='border border-slate-200 bg-slate-50 rounded px-2 outline-none'
                     />
                 )}
+            </div>
+            <div>
+                <label className='labelWithTooltip'>
+                    Tus redes (opcional):
+                    <span className='tooltip'>Deja alguna red social si deseas que se te notifique cuando tu recurso sea agregado. Puede ser X -twitter- o LinkedIn</span>
+                    <input 
+                        type="text" 
+                        value={social} 
+                        onChange={(e) => setSocial(e.target.value)}
+                        className='border border-slate-200 bg-slate-100 rounded mt-2 md:mt-0 md:ml-2 px-2 outline-none'
+                        placeholder="pedritoLopex"
+                    />
+                </label>
             </div>
             <button className='my-4 self-center text-white text-bold px-3 py-1 rounded bg-purple-500 hover:bg-purple-600 transition duration-300 hover:scale-105' type="submit">Enviar</button>
         </form>
