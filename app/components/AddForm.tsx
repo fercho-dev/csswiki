@@ -35,40 +35,46 @@ const isValidURL = (str: string): boolean => {
 
 export const CustomForm: FC = () => {
     const [url, setUrl] = useState<string>('');
-    const [filtro, setFiltro] = useState<string>('');
+    const [filtro, setFiltro] = useState<string>(filters[0]);
     const [customFiltro, setCustomFiltro] = useState<boolean>(false);
+    const [customFiltroValue, setCustomFiltroValue] = useState<string>('');
 
     const handleSubmit = (e: FormEvent): void => {
         e.preventDefault();
-
-        if (!isValidURL(url)) {
-            alert('Ups! Parece que la URL no es valida.');
-            return;
+        let filtroToSave: string;
+        if(customFiltro) {
+            filtroToSave = customFiltroValue.trim();
+        } else {
+            filtroToSave = filtro;
         }
+        alert(filtroToSave);
+        // if (!isValidURL(url)) {
+        //     alert('Ups! Parece que la URL no es valida.');
+        //     return;
+        // }
 
-        postData(`/api/db?url=${url}&filtro=${filtro}`)
-          .then(data => {
-              if(data.acknowledged) {
-                  alert('🎉 ¡Recurso guardado exitosamente! Se validará y se agregará pronto');
-                  setUrl('');
-                  setFiltro('');
-              } else {
-                throw new Error('No se pudo guardar el recurso.');
-              }
-          })
-          .catch(error => {
-              alert(`Algo salio mal. Intentalo más tarde. ${error}`);
-          });
+        // postData(`/api/db?url=${url}&filtro=${filtro}`)
+        //   .then(data => {
+        //       if(data.acknowledged) {
+        //           alert('🎉 ¡Recurso guardado exitosamente! Se validará y se agregará pronto');
+        //           setUrl('');
+        //           setFiltro('');
+        //       } else {
+        //         throw new Error('No se pudo guardar el recurso.');
+        //       }
+        //   })
+        //   .catch(error => {
+        //       alert(`Algo salio mal. Intentalo más tarde. ${error}`);
+        //   });
     }
 
     const handleFilterChange = (e: ChangeEvent<HTMLSelectElement>): void => {
         const value = e.target.value;
-
-        if (value === "custom") {
+        setFiltro(value);
+        if (value === "") {
             setCustomFiltro(true);
         } else {
             setCustomFiltro(false);
-            setFiltro(value);
         }
     }
 
@@ -98,15 +104,15 @@ export const CustomForm: FC = () => {
                         {filters.map((option: Filtro) => (
                             <option key={option} value={option}>{option}</option>
                         ))}
-                        <option value="custom">Otro...</option>
+                        <option value="">Otro...</option>
                     </select>
                 </label>
                 {customFiltro && (
                     <input 
                         type="text"
-                        value={filtro}
+                        value={customFiltroValue}
                         placeholder="Agrega un nuevo filtro"
-                        onChange={(e) => setFiltro(e.target.value)}
+                        onChange={(e) => setCustomFiltroValue(e.target.value)}
                         className='border border-slate-200 bg-slate-50 rounded px-2 outline-none'
                     />
                 )}
